@@ -92,7 +92,7 @@ export default function Process() {
   return (
     <section ref={root} className="relative overflow-hidden bg-navy-deep pb-20 pt-24 text-white md:pb-24 md:pt-36">
       <GridOverlay />
-      <div className="relative mx-auto max-w-[1240px] px-5 md:px-10 xl:px-14">
+      <div className="relative mx-auto max-w-[1440px] px-5 md:px-10 xl:px-14">
         <div data-reveal className="text-center">
           <p className="eyebrow !text-white/70">How It Works</p>
           <h2 className="display mt-3 text-3xl md:text-4xl">A Simple Process, Amazing Results</h2>

@@ -7,7 +7,7 @@ export default function Pricing() {
   return (
     <section id="packages" className="relative bg-navy-deep pb-20 pt-24 text-white md:pb-28 md:pt-32">
       <GridOverlay />
-      <div className="relative mx-auto max-w-[1240px] px-5 md:px-10 xl:px-14">
+      <div className="relative mx-auto max-w-[1440px] px-5 md:px-10 xl:px-14">
         <div data-reveal className="text-center">
           <p className="eyebrow !text-white/70">Our Packages</p>
           <h2 className="display mt-3 text-3xl md:text-4xl">Flexible Packages for Every Listing</h2>

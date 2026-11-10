@@ -46,7 +46,7 @@ export default function Testimonials() {
   return (
     <section className="relative overflow-hidden bg-navy-deep pb-24 pt-24 text-white md:pb-32 md:pt-32">
       <GridOverlay />
-      <div className="relative mx-auto max-w-[1240px] px-5 md:px-10 xl:px-14">
+      <div className="relative mx-auto max-w-[1440px] px-5 md:px-10 xl:px-14">
         <div data-reveal>
           <p className="eyebrow !text-white/70">What Our Clients Say</p>
           <h2 className="display mt-3 text-3xl md:text-5xl">Trusted by <span className="text-gold">Real Estate Professionals</span></h2>

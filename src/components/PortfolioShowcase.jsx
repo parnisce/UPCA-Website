@@ -36,7 +36,7 @@ export default function PortfolioShowcase() {
       </div>
       <GridOverlay />
 
-      <div className="relative mx-auto max-w-[1240px] px-5 md:px-10 xl:px-14">
+      <div className="relative mx-auto max-w-[1440px] px-5 md:px-10 xl:px-14">
         <div data-reveal className="mx-auto max-w-3xl text-center">
           <p className="eyebrow !text-white/70">Why UPCA</p>
           <h2 className="display mt-4 text-3xl md:text-5xl">
