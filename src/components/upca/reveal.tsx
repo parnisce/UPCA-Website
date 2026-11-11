@@ -17,6 +17,14 @@ const TARGETS = [
   ".u-final__title",
   ".u-footer__top > *",
   ".u-faq__grid > *",
+  ".u-detail__main",
+  ".u-detail__side",
+  ".u-pkgcards",
+  ".u-more__list",
+  ".u-ctaband__inner",
+  ".u-contact__info",
+  ".u-contact__form",
+  ".u-pagehero .u-crumb",
 ].join(",");
 
 export function Reveal() {

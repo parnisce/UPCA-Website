@@ -1,46 +1,7 @@
-import { useEffect, useState } from "react";
-
-import { BOOK_LABEL, CONTACT, PACKAGES } from "./content";
-
-type Status = "idle" | "sending" | "done" | "error";
+import { ContactForm } from "./contact-form";
+import { CONTACT } from "./content";
 
 export function FinalCTA() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [pkg, setPkg] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const on = (e: Event) => setPkg(String((e as CustomEvent).detail ?? ""));
-    window.addEventListener("upca:package", on);
-    return () => window.removeEventListener("upca:package", on);
-  }, []);
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    setStatus("sending");
-    setError("");
-    // Static hosting: open the visitor's email app with the request pre-filled.
-    const get = (k: string) => String(form.get(k) ?? "").trim();
-    if (get("website")) { setStatus("done"); return; }
-    if (!get("name") || !/^\S+@\S+\.\S+$/.test(get("email"))) {
-      setStatus("error");
-      setError("Please check your name and email, then try again.");
-      return;
-    }
-    const body = [
-      `Name: ${get("name")}`,
-      `Email: ${get("email")}`,
-      `Phone: ${get("phone")}`,
-      `Package: ${get("package")}`,
-      `Area: ${get("area")}`,
-      "",
-      get("message"),
-    ].join("\n");
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent("Consultation request")}&body=${encodeURIComponent(body)}`;
-    setStatus("done");
-  }
-
   return (
     <section className="u-final" id="contact">
       <div className="u-final__gold">
@@ -57,62 +18,7 @@ export function FinalCTA() {
               Prefer to talk? <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
             </p>
           </div>
-          {status === "done" ? (
-            <div className="u-sent" role="status">
-              <h3>Request received.</h3>
-              <p>Thank you. We will be in touch about your listing shortly.</p>
-            </div>
-          ) : (
-            <form className="u-form" noValidate onSubmit={onSubmit}>
-              <div className="u-form__row">
-                <label>
-                  <span>Name</span>
-                  <input autoComplete="name" name="name" required type="text" />
-                </label>
-                <label>
-                  <span>Email</span>
-                  <input autoComplete="email" name="email" required type="email" />
-                </label>
-              </div>
-              <div className="u-form__row">
-                <label>
-                  <span>Phone (optional)</span>
-                  <input autoComplete="tel" name="phone" type="tel" />
-                </label>
-                <label>
-                  <span>Package</span>
-                  <select name="package" onChange={(e) => setPkg(e.target.value)} value={pkg}>
-                    <option value="">Not sure yet</option>
-                    {PACKAGES.map((p) => (
-                      <option key={p.id} value={p.name}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-              <label>
-                <span>Property address or area</span>
-                <input name="area" type="text" />
-              </label>
-              <label>
-                <span>Anything we should know (optional)</span>
-                <textarea name="message" rows={3} />
-              </label>
-              <input aria-hidden="true" autoComplete="off" className="u-hp" name="website" tabIndex={-1} type="text" />
-              {error ? (
-                <p className="u-form__error" role="alert">
-                  {error}
-                </p>
-              ) : null}
-              <button className="u-frame-btn" disabled={status === "sending"} type="submit">
-                <span className="u-frame-btn__a">{status === "sending" ? "Sending" : BOOK_LABEL}</span>
-                <span aria-hidden="true" className="u-frame-btn__b">
-                  {status === "sending" ? "Sending" : BOOK_LABEL}
-                </span>
-              </button>
-            </form>
-          )}
+          <ContactForm />
         </div>
       </div>
     </section>

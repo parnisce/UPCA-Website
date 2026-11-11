@@ -102,23 +102,23 @@ export const ADDONS = [
 ];
 
 export const NAV_LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About Us" },
-  { href: "#why", label: "Why Us" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#contact", label: "Contact Us" },
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
+  { href: "/#about", label: "About Us" },
+  { href: "/#why", label: "Why Us" },
+  { href: "/#testimonials", label: "Testimonials" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export const FOOTER_SERVICES = ["Real Estate Photography", "Property Video Tours", "360 Virtual Tours", "Drone Photo and Video", "Agent Websites", "Full-Service Marketing"];
 
 export const SERVICES = [
-  { title: "Real Estate Photography", img: "/assets/img/interior.jpg", text: "Bright, modern, high-quality photos that make your listings stand out." },
-  { title: "Property Video Tours", img: "/assets/world/scene-04-poster.jpg", text: "Cinematic videos that showcase the property's true potential." },
-  { title: "360 Virtual Tours", img: "/assets/world/scene-06-poster.jpg", text: "Immersive tours that let buyers explore anytime, anywhere." },
-  { title: "Drone Photos and Films", img: "/assets/img/aerial.jpg", text: "Stunning aerial visuals that highlight the entire property and location." },
-  { title: "Agent Websites", img: "/assets/img/laptop.jpg", text: "Beautiful, modern websites designed for real estate professionals." },
-  { title: "Full-Service Marketing", img: "/assets/world/scene-02-poster.jpg", text: "A complete marketing solution to get your listings maximum exposure." },
+  { slug: "real-estate-photography", title: "Real Estate Photography", img: "/assets/img/interior.jpg", text: "Bright, modern, high-quality photos that make your listings stand out." },
+  { slug: "property-video-tours", title: "Property Video Tours", img: "/assets/world/scene-04-poster.jpg", text: "Cinematic videos that showcase the property's true potential." },
+  { slug: "360-virtual-tours", title: "360 Virtual Tours", img: "/assets/world/scene-06-poster.jpg", text: "Immersive tours that let buyers explore anytime, anywhere." },
+  { slug: "drone-photos-and-films", title: "Drone Photos and Films", img: "/assets/img/aerial.jpg", text: "Stunning aerial visuals that highlight the entire property and location." },
+  { slug: "agent-websites", title: "Agent Websites", img: "/assets/img/laptop.jpg", text: "Beautiful, modern websites designed for real estate professionals." },
+  { slug: "full-service-marketing", title: "Full-Service Marketing", img: "/assets/world/scene-02-poster.jpg", text: "A complete marketing solution to get your listings maximum exposure." },
 ];
 
 export const ABOUT = {

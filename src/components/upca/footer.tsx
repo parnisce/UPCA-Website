@@ -1,4 +1,4 @@
-import { CONTACT, CORE_AREAS, FOOTER_SERVICES } from "./content";
+import { CONTACT, CORE_AREAS, SERVICES } from "./content";
 
 export function SiteFooter() {
   return (
@@ -12,8 +12,10 @@ export function SiteFooter() {
             <div>
               <h4>Services</h4>
               <ul>
-                {FOOTER_SERVICES.map((s) => (
-                  <li key={s}>{s}</li>
+                {SERVICES.map((s) => (
+                  <li key={s.slug}>
+                    <a href={`/services/${s.slug}`}>{s.title}</a>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -28,6 +30,9 @@ export function SiteFooter() {
             <div>
               <h4>Contact</h4>
               <ul>
+                <li>
+                  <a href="/contact">Contact us</a>
+                </li>
                 <li>
                   <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
                 </li>

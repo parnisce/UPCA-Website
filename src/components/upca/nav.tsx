@@ -52,7 +52,7 @@ export function SiteNav() {
             {l.label}
           </a>
         ))}
-        <a className="u-drawer__cta" href="#contact" onClick={() => setOpen(false)}>
+        <a className="u-drawer__cta" href="/contact" onClick={() => setOpen(false)}>
           Book Free Consultation
         </a>
       </nav>
