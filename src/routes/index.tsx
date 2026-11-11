@@ -12,6 +12,7 @@ import { SiteNav } from "@/components/upca/nav";
 import { Packages } from "@/components/upca/packages";
 import { Process } from "@/components/upca/process";
 import { Why } from "@/components/upca/why";
+import { Reveal } from "@/components/upca/reveal";
 import { ScrollScrub } from "@/components/scroll-scrub/scroll-scrub";
 import { scrollScrubScenes, scrollScrubTheme } from "@/scroll-scrub-scenes";
 
@@ -26,6 +27,7 @@ function Index() {
   return (
     <>
       <SiteNav />
+      <Reveal />
       <main>
         <span id="home" />
         <ScrollScrub className="upca-journey" scenes={scrollScrubScenes} theme={scrollScrubTheme} />
