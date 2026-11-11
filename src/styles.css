@@ -581,3 +581,5 @@ img, video { max-width: 100%; }
 @media (hover: none) {
   .u-quotes li:hover, .u-towns li:hover, .u-row:hover { transform: none; }
 }
+
+.u-section, #home { scroll-margin-top: 3.5rem; }
