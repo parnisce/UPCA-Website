@@ -4,7 +4,8 @@ export function Process() {
   return (
     <section className="u-section u-process" id="process">
       <div className="u-wrap">
-        <h2 className="u-h2 u-h2--sm">Three steps from booking to live listing.</h2>
+        <p className="u-eyebrow">How it works</p>
+        <h2 className="u-h2 u-h2--sm">A simple process, amazing results.</h2>
         <ol className="u-steps">
           <span aria-hidden="true" className="u-steps__route" />
           {STEPS.map((s, i) => (

@@ -102,9 +102,53 @@ export const ADDONS = [
 ];
 
 export const NAV_LINKS = [
-  { href: "#packages", label: "Packages" },
-  { href: "#process", label: "Process" },
-  { href: "#areas", label: "Areas" },
+  { href: "#home", label: "Home" },
+  { href: "#services", label: "Services" },
+  { href: "#about", label: "About Us" },
+  { href: "#why", label: "Why Us" },
+  { href: "#testimonials", label: "Testimonials" },
+  { href: "#contact", label: "Contact Us" },
 ];
 
 export const FOOTER_SERVICES = ["Real Estate Photography", "Property Video Tours", "360 Virtual Tours", "Drone Photo and Video", "Agent Websites", "Full-Service Marketing"];
+
+export const SERVICES = [
+  { title: "Real Estate Photography", text: "Bright, modern, high-quality photos that make your listings stand out." },
+  { title: "Property Video Tours", text: "Cinematic videos that showcase the property's true potential." },
+  { title: "360 Virtual Tours", text: "Immersive tours that let buyers explore anytime, anywhere." },
+  { title: "Drone Photos and Films", text: "Stunning aerial visuals that highlight the entire property and location." },
+  { title: "Agent Websites", text: "Beautiful, modern websites designed for real estate professionals." },
+  { title: "Full-Service Marketing", text: "A complete marketing solution to get your listings maximum exposure." },
+];
+
+export const ABOUT = {
+  title: "One team for every listing.",
+  paragraphs: [
+    "UPCA is a real estate marketing and media team serving agents, teams and brokerages across Niagara, Hamilton and Burlington.",
+    "We cover photography, video tours, 360 virtual tours, drone photo and video, agent websites, and social media and marketing campaigns, so one team can handle the media for every listing.",
+  ],
+  facts: [
+    { value: "6", label: "services under one roof" },
+    { value: "$149", label: "packages start here" },
+    { value: "11", label: "core communities served" },
+  ],
+};
+
+// Sample reviews for layout only. Replace with real, approved client reviews.
+export const TESTIMONIALS = [
+  { name: "Sample Client A", role: "Realtor, Niagara Falls", text: "The photos made our listing look like a magazine spread. We had showings booked within a day of it going live." },
+  { name: "Sample Client B", role: "Broker, Hamilton", text: "Drone footage and the video tour set our listing apart. Fast delivery, easy to work with, and the quality is consistently great." },
+  { name: "Sample Client C", role: "Realtor, Burlington", text: "From booking to delivery the process was simple. The team showed up on time and handled everything, including the property website." },
+  { name: "Sample Client D", role: "Team Lead, St. Catharines", text: "Our whole team uses UPCA now. The 360 tours save us so many unnecessary showings and buyers arrive already sold on the home." },
+  { name: "Sample Client E", role: "Realtor, Grimsby", text: "Turnaround is incredibly quick. I get edited photos the next morning, which keeps my listings ahead of the competition." },
+  { name: "Sample Client F", role: "Agent, Welland", text: "The social media creatives were a bonus I did not expect. One shoot gave me content for the whole campaign." },
+];
+
+export const FAQS = [
+  { q: "Which areas do you serve?", a: "We cover Niagara Falls, Niagara on the Lake, St. Catharines, Welland, Thorold, Pelham, Grimsby, Lincoln, Fort Erie, Port Colborne and Wainfleet. For Hamilton, Burlington and Haldimand, call us first. Nearby regions may be available on request." },
+  { q: "How much does it cost?", a: "Packages start at $149 for Essentials, $399 for Pro Plus and $645 for Pro Max. You can also add single services, such as aerial photos for $39 or a 360 Matterport virtual tour for $135. Custom packages are available." },
+  { q: "How fast will I get my media?", a: "Essentials includes next day delivery. Pro Max adds priority scheduling and fast turnaround." },
+  { q: "What is included in the Essentials package?", a: "30 to 35 high quality edited photos, interior and exterior, ready for the MLS and print, plus marketing graphics such as Listing Spotlight, Open House Promo, Price Update, Under Contract and Just Sold." },
+  { q: "Do you offer drone and 360 tours?", a: "Yes. Aerial photos and aerial video are in Pro Plus, and Matterport 360 tours with an interactive floor plan are in Pro Max. Both are also available as add-ons." },
+  { q: "How do I book?", a: "Book a free 15-minute consultation with the form below or call us. Tell us about the property and we will recommend the package that fits. No obligation." },
+];

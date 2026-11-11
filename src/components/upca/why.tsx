@@ -4,9 +4,13 @@ export function Why() {
   return (
     <section className="u-section u-why" id="why">
       <div className="u-wrap u-why__grid">
-        <h2 className="u-h2 u-why__title">
-          Marketing that makes your <em>listing stand out.</em>
-        </h2>
+        <div>
+          <p className="u-eyebrow">Why UPCA</p>
+          <h2 className="u-h2 u-why__title">
+            Marketing that makes your <em>listing stand out.</em>
+          </h2>
+          <p className="u-lede">We combine creativity, technology and local marketing expertise to deliver results that help you sell faster and for more.</p>
+        </div>
         <ul className="u-reasons">
           {REASONS.map((r) => (
             <li key={r.title}>

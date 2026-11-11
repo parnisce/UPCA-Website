@@ -49,8 +49,8 @@ export function Packages() {
     <section className="u-section u-packages" id="packages">
       <div className="u-wrap">
         <header className="u-head">
-          <h2 className="u-h2">Packages for every listing.</h2>
-          <p className="u-lede">Pick a package, or ask for a custom one. Every package is priced per property.</p>
+          <h2 className="u-h2">Flexible packages for every listing.</h2>
+          <p className="u-lede">Choose the right package for your property. Custom packages are also available.</p>
         </header>
         <ul className="u-rows">
           {PACKAGES.map((p, i) => (

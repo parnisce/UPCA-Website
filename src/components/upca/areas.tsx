@@ -7,7 +7,7 @@ export function Areas() {
         <div className="u-areas__copy">
           <p className="u-eyebrow">Areas we serve</p>
           <h2 className="u-h2 u-h2--sm">Niagara, Hamilton and Burlington.</h2>
-          <p className="u-lede">Real estate media and marketing across the Niagara region, with Hamilton, Burlington and Haldimand by arrangement.</p>
+          <p className="u-lede">We provide real estate media and marketing services across Niagara, Hamilton, Burlington and surrounding areas.</p>
           <ul className="u-towns">
             {CORE_AREAS.map((a) => (
               <li key={a}>{a}</li>

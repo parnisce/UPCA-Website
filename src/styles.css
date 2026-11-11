@@ -213,7 +213,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .u-nav__inner { display: flex; align-items: center; gap: 2rem; max-width: 1440px; margin-inline: auto; padding: 1rem clamp(1.25rem, 4vw, 4rem); }
 .u-logo { display: inline-flex; flex: none; }
 .u-logo img { display: block; width: auto; height: 3rem; filter: drop-shadow(0 2px 14px rgba(7, 24, 42, 0.55)); }
-.u-nav__links { display: flex; gap: 2.2rem; margin-left: auto; margin-right: 1.5rem; }
+.u-nav__links { display: flex; gap: 1.6rem; margin-left: auto; margin-right: 1.5rem; }
 .u-nav__links a { position: relative; padding-block: 0.4rem; color: var(--u-ink); font-size: 0.92rem; font-weight: 500; text-decoration: none; }
 .u-nav__links a::after { position: absolute; right: 0; bottom: 0; left: 0; height: 1px; content: ""; background: var(--u-gold); transform: scaleX(0); transform-origin: left; transition: transform 0.35s; }
 .u-nav__links a:hover::after, .u-nav__links a:focus-visible::after { transform: scaleX(1); }
@@ -413,4 +413,37 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-snap-type: y proximity; }
   .upca-journey .scroll-scrub__chapter { scroll-snap-align: start; scroll-snap-stop: always; }
+}
+
+/* Services, About, Testimonials, FAQ */
+.u-svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 clamp(1.5rem, 3vw, 3rem); margin: clamp(2.5rem, 5vw, 4rem) 0 0; padding: 0; list-style: none; }
+.u-svc li { padding: 1.75rem 0 2rem; border-top: 1px solid var(--u-hair); }
+.u-svc__num { display: block; color: var(--u-gold); font-family: var(--u-mono); font-size: 0.8rem; letter-spacing: 0.14em; }
+.u-svc h3 { margin: 0.9rem 0 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+.u-svc p { max-width: 34ch; margin: 0.6rem 0 1.2rem; color: var(--u-muted); line-height: 1.55; }
+.u-svc a { color: var(--u-gold); font-size: 0.95rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--u-gold); }
+.u-about { background: var(--u-field); }
+.u-about__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.u-facts { display: grid; gap: 0; margin: 0; }
+.u-facts div { display: flex; align-items: baseline; gap: 1.25rem; padding: 1.4rem 0; border-top: 1px solid var(--u-hair); }
+.u-facts dt { min-width: 5.5rem; color: var(--u-gold); font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.u-facts dd { margin: 0; color: var(--u-muted); font-size: 1.05rem; }
+.u-reviews { background: var(--u-deep); }
+.u-quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.25rem, 2.5vw, 2.5rem); margin: clamp(2.5rem, 5vw, 4rem) 0 0; padding: 0; list-style: none; }
+.u-quotes li { display: flex; flex-direction: column; padding-top: 1.5rem; border-top: 2px solid var(--u-gold); }
+.u-quotes blockquote { margin: 0; font-size: 1.15rem; line-height: 1.55; }
+.u-quotes__who { margin: 1.25rem 0 0; color: var(--u-muted); font-size: 0.95rem; }
+.u-quotes__who strong { display: block; color: var(--u-ink); font-weight: 600; }
+.u-quotes__tag { margin-top: 0.75rem; color: var(--u-muted); font-family: var(--u-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; }
+.u-faq__grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+.u-faq__list { border-top: 1px solid var(--u-hair); }
+.u-faq details { border-bottom: 1px solid var(--u-hair); }
+.u-faq summary { display: flex; justify-content: space-between; gap: 1.5rem; padding: 1.4rem 0; cursor: pointer; font-size: 1.25rem; font-weight: 600; list-style: none; }
+.u-faq summary::-webkit-details-marker { display: none; }
+.u-faq summary::after { flex: none; color: var(--u-gold); content: "+"; font-size: 1.5rem; line-height: 1; transition: transform 0.25s; }
+.u-faq details[open] summary::after { transform: rotate(45deg); }
+.u-faq details p { max-width: 60ch; margin: 0 0 1.5rem; color: var(--u-muted); line-height: 1.6; }
+@media (max-width: 860px) {
+  .u-svc, .u-quotes { grid-template-columns: 1fr; }
+  .u-about__grid, .u-faq__grid { grid-template-columns: 1fr; }
 }
