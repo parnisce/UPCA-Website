@@ -19,6 +19,7 @@ const QUANTA_ICONS_SHIM = fileURLToPath(
 );
 
 export default defineConfig(({ command, mode }) => {
+  const staticBuild = process.env.STATIC_BUILD === "1";
   const designInspectorEnabled = process.env.HF_DESIGN_INSPECTOR === "1" || mode === "design";
 
   return {
@@ -47,7 +48,7 @@ export default defineConfig(({ command, mode }) => {
       // both variants bundle their edge build (react-dom's web-streams server,
       // etc.) instead of the Node variant leaning on nodejs_compat shims.
       // `vite dev` SSR runs in Node, where default node resolution is correct.
-      ...(command === "build"
+      ...(command === "build" && !staticBuild
         ? {
             target: "webworker" as const,
             resolve: {
@@ -97,9 +98,12 @@ export default defineConfig(({ command, mode }) => {
       // SSR-safe: never touch browser-only globals (window, document,
       // localStorage, navigator) during render or at module top level — only
       // inside effects/handlers, or guarded with `typeof window !== "undefined"`.
-      tanstackStart({
-        server: { entry: "server" },
-      }),
+      // STATIC_BUILD=1 (Cloudflare Pages): SPA shell with no Worker; output in dist/client.
+      tanstackStart(
+        process.env.STATIC_BUILD === "1"
+          ? { spa: { enabled: true } }
+          : { server: { entry: "server" } },
+      ),
       higgsfieldDesignInspectorVitePlugin(designInspectorEnabled),
       react({
         babel: {

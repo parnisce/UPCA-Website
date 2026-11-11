@@ -2,7 +2,7 @@
 
 export const BOOK_LABEL = "Book Free Consultation";
 // Public origin used for absolute social-card URLs. Update if a custom domain is connected.
-export const SITE_ORIGIN = "https://upca-media.higgsfield.app";
+export const SITE_ORIGIN = "https://upca-website.pages.dev";
 export const THEME_COLOR = "#0a2236";
 
 export type Pkg = {

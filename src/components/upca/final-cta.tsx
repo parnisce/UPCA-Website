@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { BOOK_LABEL, CONTACT, PACKAGES } from "./content";
-import { submitInquiry } from "./inquiry.functions";
 
 type Status = "idle" | "sending" | "done" | "error";
 
@@ -21,27 +20,25 @@ export function FinalCTA() {
     const form = new FormData(e.currentTarget);
     setStatus("sending");
     setError("");
-    try {
-      const res = await submitInquiry({
-        data: {
-          name: String(form.get("name") ?? ""),
-          email: String(form.get("email") ?? ""),
-          phone: String(form.get("phone") ?? ""),
-          package: String(form.get("package") ?? ""),
-          area: String(form.get("area") ?? ""),
-          message: String(form.get("message") ?? ""),
-          website: String(form.get("website") ?? ""),
-        },
-      });
-      if (res.ok) setStatus("done");
-      else {
-        setStatus("error");
-        setError(res.error ?? "Something went wrong. Please try again.");
-      }
-    } catch {
+    // Static hosting: open the visitor's email app with the request pre-filled.
+    const get = (k: string) => String(form.get(k) ?? "").trim();
+    if (get("website")) { setStatus("done"); return; }
+    if (!get("name") || !/^\S+@\S+\.\S+$/.test(get("email"))) {
       setStatus("error");
       setError("Please check your name and email, then try again.");
+      return;
     }
+    const body = [
+      `Name: ${get("name")}`,
+      `Email: ${get("email")}`,
+      `Phone: ${get("phone")}`,
+      `Package: ${get("package")}`,
+      `Area: ${get("area")}`,
+      "",
+      get("message"),
+    ].join("\n");
+    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent("Consultation request")}&body=${encodeURIComponent(body)}`;
+    setStatus("done");
   }
 
   return (

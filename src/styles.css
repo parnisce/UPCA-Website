@@ -407,4 +407,4 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* Alternate copy sides; right-aligned copy clears the route rail and ends at the logo-aligned column edge */
 .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__chapter-pin { padding-right: max(clamp(1.25rem, 4vw, 4rem), calc((100% - 1440px) / 2 + clamp(1.25rem, 4vw, 4rem))); }
 .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__copy { align-items: flex-end; text-align: right; }
-@media (min-width: 861px) { .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__chapter-pin { padding-right: max(7rem, calc((100% - 1440px) / 2 + 7rem)); } }
+@media (min-width: 861px) { .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__chapter-pin { padding-right: max(10rem, calc((100% - 1440px) / 2 + 10rem)); } }
