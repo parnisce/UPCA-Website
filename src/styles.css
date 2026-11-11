@@ -237,7 +237,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .upca-journey .scroll-scrub__route-button::after { order: 2; width: 1.25rem; height: 2px; content: ""; background: var(--u-muted); transition: width 0.3s, background 0.3s; }
 .upca-journey .scroll-scrub__route-button:hover span, .upca-journey .scroll-scrub__route-button:focus-visible span, .upca-journey .scroll-scrub__route-button[aria-current="step"] span { opacity: 1; transform: none; }
 .upca-journey .scroll-scrub__route-button[aria-current="step"]::after { width: 2.5rem; background: var(--u-gold); }
-.upca-journey .scroll-scrub__chapter-pin { align-items: flex-end; padding-bottom: clamp(3rem, 9vh, 6.5rem); }
+.upca-journey .scroll-scrub__chapter-pin { align-items: center; }
 .upca-journey .scroll-scrub__copy { width: min(38rem, 46vw); }
 .upca-journey .scroll-scrub__title { max-width: 13ch; font-size: clamp(2.5rem, 5.4vw, 5.4rem); font-weight: 700; line-height: 0.98; letter-spacing: -0.04em; }
 .upca-journey .scroll-scrub__body { max-width: 38ch; font-size: clamp(1rem, 1.25vw, 1.2rem); }
@@ -408,3 +408,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__chapter-pin { padding-right: max(clamp(1.25rem, 4vw, 4rem), calc((100% - 1440px) / 2 + clamp(1.25rem, 4vw, 4rem))); }
 .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__copy { align-items: flex-end; text-align: right; }
 @media (min-width: 861px) { .upca-journey .scroll-scrub__chapter[data-align="right"] .scroll-scrub__chapter-pin { padding-right: max(10rem, calc((100% - 1440px) / 2 + 10rem)); } }
+
+/* Scroll stops on each hero chapter so the copy is read before moving on */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-snap-type: y proximity; }
+  .upca-journey .scroll-scrub__chapter { scroll-snap-align: start; scroll-snap-stop: always; }
+}
