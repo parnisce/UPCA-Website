@@ -421,7 +421,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .u-svc__num { display: block; color: var(--u-gold); font-family: var(--u-mono); font-size: 0.8rem; letter-spacing: 0.14em; }
 .u-svc h3 { margin: 0.9rem 0 0; font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
 .u-svc p { max-width: 34ch; margin: 0.6rem 0 1.2rem; color: var(--u-muted); line-height: 1.55; }
-.u-svc a { color: var(--u-gold); font-size: 0.95rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--u-gold); }
+.u-svc__go { color: var(--u-gold); font-size: 0.95rem; font-weight: 600; border-bottom: 1px solid var(--u-gold); }
 .u-about { background: var(--u-field); }
 .u-about__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
 .u-facts { display: grid; gap: 0; margin: 0; }
@@ -446,4 +446,66 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 @media (max-width: 860px) {
   .u-svc, .u-quotes { grid-template-columns: 1fr; }
   .u-about__grid, .u-faq__grid { grid-template-columns: 1fr; }
+}
+
+/* Brand motion and imagery layer */
+.u-bgsec { isolation: isolate; overflow: hidden; }
+.u-bgsec > .u-wrap { position: relative; z-index: 1; }
+.u-bgsec::before { position: absolute; inset: -10% 0; z-index: -1; content: ""; background: var(--bg) center / cover no-repeat; opacity: 0.26; filter: saturate(0.85); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 76%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 76%, transparent 100%); pointer-events: none; }
+.u-bgsec::after { position: absolute; inset: 0; z-index: -1; content: ""; background: radial-gradient(ellipse at 15% 20%, rgba(16, 62, 97, 0.55), transparent 60%), radial-gradient(ellipse at 90% 85%, rgba(242, 182, 32, 0.07), transparent 55%); pointer-events: none; }
+
+.u-draw::after { display: block; width: 4.5rem; height: 3px; margin-top: 1.4rem; content: ""; background: var(--u-gold); transform-origin: left; }
+
+.u-marquee { overflow: hidden; border-block: 1px solid var(--u-hair); background: var(--u-deep); }
+.u-marquee__track { display: flex; width: max-content; }
+.u-marquee ul { display: flex; flex: none; margin: 0; padding: 1.1rem 0; list-style: none; }
+.u-marquee li { display: flex; align-items: center; color: var(--u-ink); font-family: var(--u-mono); font-size: 0.82rem; letter-spacing: 0.18em; text-transform: uppercase; white-space: nowrap; }
+.u-marquee li::after { width: 0.45rem; height: 0.45rem; margin-inline: 2rem; content: ""; background: var(--u-gold); transform: rotate(45deg); }
+
+.u-svc li { padding: 0; border-top: 0; }
+.u-svc__card { display: block; height: 100%; color: inherit; text-decoration: none; }
+.u-svc__img { position: relative; display: block; overflow: hidden; aspect-ratio: 16 / 10; border-bottom: 2px solid var(--u-gold); }
+.u-svc__img img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s; filter: saturate(0.9) brightness(0.92); }
+.u-svc__img::after { position: absolute; inset: 0; content: ""; background: linear-gradient(to top, rgba(7, 24, 42, 0.7), transparent 55%); }
+.u-svc__num { position: absolute; top: 0.9rem; left: 0.9rem; z-index: 1; padding: 0.3rem 0.55rem; background: rgba(7, 24, 42, 0.78); color: var(--u-gold); font-family: var(--u-mono); font-size: 0.8rem; letter-spacing: 0.14em; }
+.u-svc__card h3 { margin-top: 1.25rem; }
+.u-svc__card:hover .u-svc__img img, .u-svc__card:focus-visible .u-svc__img img { transform: scale(1.07); filter: saturate(1.05) brightness(1); }
+.u-svc__card:hover h3 { color: var(--u-gold); }
+.u-svc { gap: clamp(2rem, 3vw, 3rem) clamp(1.5rem, 3vw, 3rem); }
+
+.u-about__grid { align-items: center; }
+.u-about .u-facts { grid-template-columns: repeat(3, auto); justify-content: start; gap: clamp(1.5rem, 4vw, 3.5rem); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--u-hair); }
+.u-about .u-facts div { display: block; padding: 0; border: 0; }
+.u-about .u-facts dt { min-width: 0; font-size: clamp(2.2rem, 3.6vw, 3.4rem); }
+.u-about .u-facts dd { margin-top: 0.4rem; max-width: 12ch; font-size: 0.9rem; }
+.u-collage { position: relative; aspect-ratio: 1 / 0.95; }
+.u-collage img { position: absolute; display: block; object-fit: cover; box-shadow: 0 30px 60px -20px rgba(3, 12, 22, 0.8); }
+.u-collage__a { top: 0; left: 0; width: 76%; height: 68%; }
+.u-collage__b { right: 0; bottom: 0; width: 62%; height: 54%; border: 6px solid var(--u-field); }
+.u-collage__ring { position: absolute; top: -0.9rem; left: -0.9rem; width: 5rem; height: 5rem; border-top: 3px solid var(--u-gold); border-left: 3px solid var(--u-gold); }
+
+.u-quotes li { padding: 1.75rem 1.6rem 1.5rem; border: 1px solid var(--u-hair); border-top: 2px solid var(--u-gold); background: rgba(7, 24, 42, 0.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: transform 0.35s, border-color 0.35s; }
+.u-quotes li:hover { transform: translateY(-6px); border-color: var(--u-gold); }
+.u-faq details { transition: background 0.3s; }
+.u-faq details[open] { background: rgba(16, 62, 97, 0.35); }
+.u-faq summary { padding-inline: 0.5rem; }
+.u-faq details p { padding-inline: 0.5rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .u-marquee__track { animation: u-marq 48s linear infinite; }
+  .u-marquee:hover .u-marquee__track { animation-play-state: paused; }
+  .u-collage__b { animation: u-float 7s ease-in-out infinite; }
+  .u-collage__ring { animation: u-float 9s ease-in-out infinite reverse; }
+  @keyframes u-marq { to { transform: translateX(-50%); } }
+  @keyframes u-float { 50% { transform: translateY(-14px); } }
+  @supports (animation-timeline: view()) {
+    .u-bgsec::before { animation: u-par linear both; animation-timeline: view(); }
+    .u-draw::after { animation: u-line linear both; animation-timeline: view(); animation-range: entry 20% cover 35%; }
+    .u-svc li, .u-quotes li, .u-faq details, .u-facts div { animation: u-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+    .u-svc li { animation-delay: calc(var(--i, 0) * 0ms); }
+    .u-collage__a { animation: u-slide linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+    @keyframes u-par { from { transform: translateY(-7%) scale(1.08); } to { transform: translateY(7%) scale(1.08); } }
+    @keyframes u-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes u-slide { from { transform: translateX(-30px); } to { transform: none; } }
+  }
 }

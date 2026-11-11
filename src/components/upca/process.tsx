@@ -2,10 +2,10 @@ import { STEPS } from "./content";
 
 export function Process() {
   return (
-    <section className="u-section u-process" id="process">
+    <section className="u-section u-process u-bgsec" id="process" style={{ ["--bg" as string]: "url(/assets/world/scene-03-poster.jpg)" }}>
       <div className="u-wrap">
         <p className="u-eyebrow">How it works</p>
-        <h2 className="u-h2 u-h2--sm">A simple process, amazing results.</h2>
+        <h2 className="u-h2 u-h2--sm u-draw">A simple process, amazing results.</h2>
         <ol className="u-steps">
           <span aria-hidden="true" className="u-steps__route" />
           {STEPS.map((s, i) => (

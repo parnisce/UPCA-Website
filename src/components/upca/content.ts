@@ -113,12 +113,12 @@ export const NAV_LINKS = [
 export const FOOTER_SERVICES = ["Real Estate Photography", "Property Video Tours", "360 Virtual Tours", "Drone Photo and Video", "Agent Websites", "Full-Service Marketing"];
 
 export const SERVICES = [
-  { title: "Real Estate Photography", text: "Bright, modern, high-quality photos that make your listings stand out." },
-  { title: "Property Video Tours", text: "Cinematic videos that showcase the property's true potential." },
-  { title: "360 Virtual Tours", text: "Immersive tours that let buyers explore anytime, anywhere." },
-  { title: "Drone Photos and Films", text: "Stunning aerial visuals that highlight the entire property and location." },
-  { title: "Agent Websites", text: "Beautiful, modern websites designed for real estate professionals." },
-  { title: "Full-Service Marketing", text: "A complete marketing solution to get your listings maximum exposure." },
+  { title: "Real Estate Photography", img: "/assets/img/interior.jpg", text: "Bright, modern, high-quality photos that make your listings stand out." },
+  { title: "Property Video Tours", img: "/assets/world/scene-04-poster.jpg", text: "Cinematic videos that showcase the property's true potential." },
+  { title: "360 Virtual Tours", img: "/assets/world/scene-06-poster.jpg", text: "Immersive tours that let buyers explore anytime, anywhere." },
+  { title: "Drone Photos and Films", img: "/assets/img/aerial.jpg", text: "Stunning aerial visuals that highlight the entire property and location." },
+  { title: "Agent Websites", img: "/assets/img/laptop.jpg", text: "Beautiful, modern websites designed for real estate professionals." },
+  { title: "Full-Service Marketing", img: "/assets/world/scene-02-poster.jpg", text: "A complete marketing solution to get your listings maximum exposure." },
 ];
 
 export const ABOUT = {

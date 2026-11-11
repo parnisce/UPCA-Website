@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { About } from "@/components/upca/about";
 import { Areas } from "@/components/upca/areas";
+import { Marquee } from "@/components/upca/marquee";
 import { Faq } from "@/components/upca/faq";
 import { Services } from "@/components/upca/services";
 import { Testimonials } from "@/components/upca/testimonials";
@@ -28,6 +29,7 @@ function Index() {
       <main>
         <span id="home" />
         <ScrollScrub className="upca-journey" scenes={scrollScrubScenes} theme={scrollScrubTheme} />
+        <Marquee />
         <Services />
         <About />
         <Why />

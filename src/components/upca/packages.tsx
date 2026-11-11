@@ -46,7 +46,7 @@ function Row({ pkg, index }: { pkg: Pkg; index: number }) {
 
 export function Packages() {
   return (
-    <section className="u-section u-packages" id="packages">
+    <section className="u-section u-packages u-bgsec" id="packages" style={{ ["--bg" as string]: "url(/assets/world/scene-02-poster.jpg)" }}>
       <div className="u-wrap">
         <header className="u-head">
           <h2 className="u-h2">Flexible packages for every listing.</h2>
