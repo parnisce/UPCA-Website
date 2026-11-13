@@ -1,6 +1,9 @@
-import { CONTACT, CORE_AREAS, SERVICES } from "./content";
+import { useContact, useServices } from "@/lib/site-content";
+import { CORE_AREAS } from "./content";
 
 export function SiteFooter() {
+  const CONTACT = useContact();
+  const SERVICES = useServices();
   return (
     <footer className="u-footer">
       <div className="u-wrap">
@@ -32,6 +35,9 @@ export function SiteFooter() {
               <ul>
                 <li>
                   <a href="/contact">Contact us</a>
+                </li>
+                <li>
+                  <a href="/blog">Blog</a>
                 </li>
                 <li>
                   <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>

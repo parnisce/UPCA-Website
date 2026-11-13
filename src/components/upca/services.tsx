@@ -1,6 +1,7 @@
-import { SERVICES } from "./content";
+import { useServices } from "@/lib/site-content";
 
 export function Services() {
+  const SERVICES = useServices();
   return (
     <section className="u-section u-services u-bgsec" id="services" style={{ ["--bg" as string]: "url(/assets/world/scene-01-poster.jpg)" }}>
       <div className="u-wrap">

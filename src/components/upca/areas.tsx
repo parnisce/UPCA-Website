@@ -1,4 +1,5 @@
-import { CALL_FIRST_AREAS, CONTACT, CORE_AREAS } from "./content";
+import { useContact } from "@/lib/site-content";
+import { CALL_FIRST_AREAS, CORE_AREAS } from "./content";
 
 function Pin() {
   return (
@@ -10,6 +11,7 @@ function Pin() {
 }
 
 export function Areas() {
+  const CONTACT = useContact();
   return (
     <section className="u-section u-areas u-bgsec" id="areas" style={{ ["--bg" as string]: "url(/assets/img/niagara.jpg)" }}>
       <div className="u-wrap">

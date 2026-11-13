@@ -1,7 +1,8 @@
 import { ContactForm } from "./contact-form";
-import { CONTACT } from "./content";
+import { useContact } from "@/lib/site-content";
 
 export function FinalCTA() {
+  const CONTACT = useContact();
   return (
     <section className="u-final" id="contact">
       <div className="u-final__gold">

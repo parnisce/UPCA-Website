@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { SERVICES } from "@/components/upca/content";
 import { CtaBand, PageHero, PageShell } from "@/components/upca/page-shell";
 import { SERVICE_DETAILS } from "@/components/upca/service-details";
+import { useServices } from "@/lib/site-content";
 
 const DESC = "Real estate photography, property video tours, 360 virtual tours, drone photo and video, agent websites and full-service marketing in Niagara, Hamilton and Burlington.";
 
@@ -19,6 +19,7 @@ export const Route = createFileRoute("/services/")({
 });
 
 function ServicesPage() {
+  const SERVICES = useServices();
   return (
     <PageShell>
       <PageHero

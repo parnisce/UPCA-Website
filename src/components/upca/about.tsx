@@ -1,6 +1,7 @@
-import { ABOUT } from "./content";
+import { useAbout } from "@/lib/site-content";
 
 export function About() {
+  const ABOUT = useAbout();
   return (
     <section className="u-section u-about u-bgsec" id="about" style={{ ["--bg" as string]: "url(/assets/world/scene-04-poster.jpg)" }}>
       <div className="u-wrap u-about__grid">

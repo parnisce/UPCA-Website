@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ContactForm } from "@/components/upca/contact-form";
-import { CONTACT, CORE_AREAS, CALL_FIRST_AREAS } from "@/components/upca/content";
+import { CORE_AREAS, CALL_FIRST_AREAS } from "@/components/upca/content";
+import { useContact } from "@/lib/site-content";
 import { PageHero, PageShell } from "@/components/upca/page-shell";
 
 const DESC = "Book a free 15-minute consultation with UPCA Real Estate Marketing and Media. Call, email or send a request for your Niagara, Hamilton or Burlington listing.";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
+  const CONTACT = useContact();
   return (
     <PageShell>
       <PageHero

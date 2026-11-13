@@ -1,6 +1,7 @@
-import { FAQS } from "./content";
+import { useFaqs } from "@/lib/site-content";
 
 export function Faq() {
+  const FAQS = useFaqs();
   return (
     <section className="u-section u-faq u-bgsec" id="faq" style={{ ["--bg" as string]: "url(/assets/img/niagara.jpg)" }}>
       <div className="u-wrap u-faq__grid">

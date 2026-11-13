@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { BOOK_LABEL, CONTACT, PACKAGES } from "./content";
+import { api } from "@/lib/supabase";
+import { useContact } from "@/lib/site-content";
+import { BOOK_LABEL, PACKAGES } from "./content";
 
 type Status = "idle" | "sending" | "done" | "error";
 
 export function ContactForm({ defaultPackage = "" }: { defaultPackage?: string }) {
+  const CONTACT = useContact();
   const [status, setStatus] = useState<Status>("idle");
   const [pkg, setPkg] = useState(defaultPackage);
   const [error, setError] = useState("");
@@ -20,7 +23,6 @@ export function ContactForm({ defaultPackage = "" }: { defaultPackage?: string }
     const form = new FormData(e.currentTarget);
     setStatus("sending");
     setError("");
-    // Static hosting: open the visitor's email app with the request pre-filled.
     const get = (k: string) => String(form.get(k) ?? "").trim();
     if (get("website")) { setStatus("done"); return; }
     if (!get("name") || !/^\S+@\S+\.\S+$/.test(get("email"))) {
@@ -28,16 +30,22 @@ export function ContactForm({ defaultPackage = "" }: { defaultPackage?: string }
       setError("Please check your name and email, then try again.");
       return;
     }
-    const body = [
-      `Name: ${get("name")}`,
-      `Email: ${get("email")}`,
-      `Phone: ${get("phone")}`,
-      `Package: ${get("package")}`,
-      `Area: ${get("area")}`,
-      "",
-      get("message"),
-    ].join("\n");
-    window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent("Consultation request")}&body=${encodeURIComponent(body)}`;
+    const record = {
+      name: get("name").slice(0, 200),
+      email: get("email").slice(0, 320),
+      phone: get("phone").slice(0, 60),
+      package: get("package").slice(0, 100),
+      area: get("area").slice(0, 300),
+      message: get("message").slice(0, 5000),
+      source: window.location.pathname.slice(0, 100) || "website",
+    };
+    try {
+      await api("/rest/v1/enquiries", { method: "POST", body: record, prefer: "return=minimal" });
+    } catch {
+      // Database unreachable: fall back to the visitor's email app so the request is not lost.
+      const body = [`Name: ${record.name}`, `Email: ${record.email}`, `Phone: ${record.phone}`, `Package: ${record.package}`, `Area: ${record.area}`, "", record.message].join("\n");
+      window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent("Consultation request")}&body=${encodeURIComponent(body)}`;
+    }
     setStatus("done");
   }
 
