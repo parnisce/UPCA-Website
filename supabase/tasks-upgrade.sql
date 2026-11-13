@@ -12,4 +12,9 @@ alter table public.tasks add column if not exists estimate_min integer;
 alter table public.tasks add column if not exists checklist jsonb not null default '[]'::jsonb;
 alter table public.tasks add column if not exists start_at timestamptz;
 
+alter table public.tasks add column if not exists timer_started_at timestamptz;
+alter table public.tasks add column if not exists category text not null default 'shoots';
+alter table public.tasks drop constraint if exists tasks_category_check;
+alter table public.tasks add constraint tasks_category_check check (category in ('shoots', 'editing', 'marketing', 'admin'));
+
 notify pgrst, 'reload schema';

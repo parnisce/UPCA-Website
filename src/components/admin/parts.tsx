@@ -32,6 +32,8 @@ const PATHS: Record<string, string> = {
   right: "M9 6l6 6-6 6",
   tasks: "M5 6l1.5 1.5L9 5M5 12l1.5 1.5L9 11M5 18l1.5 1.5L9 17M12 6h8M12 12h8M12 18h8",
   trend: "M4 19V5M4 19h16M7 15l4-4 3 3 5-6",
+  play: "M8 5.5v13l11-6.5-11-6.5Z",
+  pause: "M8 5h3v14H8V5Zm5 0h3v14h-3V5Z",
   lock: "M6 11h12v9H6v-9Zm3 0V8a3 3 0 0 1 6 0v3",
 };
 

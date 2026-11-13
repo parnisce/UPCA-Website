@@ -1201,3 +1201,16 @@ img, video { max-width: 100%; }
 .tk-stats strong { font-family: var(--u-font); letter-spacing: -0.03em; }
 @media (max-width: 1100px) { .ti-main { grid-template-columns: 1fr; } .ti-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .ti-day li { grid-template-columns: auto minmax(0, 1fr) auto auto; } .ti-day li small { display: none; } }
+
+/* ---- Task timer ---- */
+.tk-col li { position: relative; }
+.tk-foot { min-height: 2.2rem; padding-right: 3.6rem; align-items: center; }
+.tk-foot em { font-style: normal; opacity: 0.7; }
+.tk-foot .is-live { color: var(--tk-cyan); font-weight: 600; }
+.tk-col li.is-running .tk-card { border-color: var(--tk-cyan); box-shadow: 0 0 0 1px rgba(25, 180, 232, 0.5), 0 10px 28px rgba(25, 180, 232, 0.18); }
+.tk-timer { position: absolute; right: 0.9rem; bottom: 0.8rem; display: grid; place-items: center; width: 2.7rem; height: 2.7rem; border: 0; border-radius: 50%; background: rgba(25, 180, 232, 0.16); color: var(--tk-cyan); cursor: pointer; transition: background 0.2s, color 0.2s, transform 0.15s; }
+.tk-timer svg path { fill: currentColor; stroke: none; }
+.tk-timer:hover { background: var(--tk-cyan); color: #04202e; transform: scale(1.06); }
+.tk-timer.is-on { background: var(--tk-cyan); color: #04202e; animation: tk-pulse 1.8s ease-out infinite; }
+@keyframes tk-pulse { 0% { box-shadow: 0 0 0 0 rgba(25, 180, 232, 0.55); } 70%, 100% { box-shadow: 0 0 0 0.7rem rgba(25, 180, 232, 0); } }
+@media (prefers-reduced-motion: reduce) { .tk-timer.is-on { animation: none; } }

@@ -5,6 +5,7 @@ import { Icon, TextArea, TextInput, type Notify } from "./parts";
 
 type Status = "open" | "doing" | "blocked" | "done";
 type Priority = "low" | "medium" | "high";
+type Category = "shoots" | "editing" | "marketing" | "admin";
 type Check = { t: string; d: boolean };
 type Task = {
   id: string;
@@ -14,6 +15,8 @@ type Task = {
   priority: Priority;
   due_date: string | null;
   start_at: string | null;
+  timer_started_at: string | null;
+  category: Category;
   position: number;
   tags: string[];
   estimate_min: number | null;
@@ -29,10 +32,16 @@ const COLS: { id: Status; label: string }[] = [
 ];
 
 const PRIORITIES: Priority[] = ["low", "medium", "high"];
+const CATEGORIES: { id: Category; label: string }[] = [
+  { id: "shoots", label: "Shoots" },
+  { id: "editing", label: "Editing" },
+  { id: "marketing", label: "Marketing" },
+  { id: "admin", label: "Admin" },
+];
 const DAY = 86_400_000;
 
 function normalise(t: Task & { status: string }): Task {
-  return { ...t, status: (t.status === "todo" ? "open" : t.status) as Status, tags: t.tags ?? [], checklist: t.checklist ?? [], estimate_min: t.estimate_min ?? null, start_at: t.start_at ?? null };
+  return { ...t, status: (t.status === "todo" ? "open" : t.status) as Status, tags: t.tags ?? [], checklist: t.checklist ?? [], estimate_min: t.estimate_min ?? null, start_at: t.start_at ?? null, timer_started_at: t.timer_started_at ?? null, category: t.category ?? "shoots" };
 }
 
 const todayStr = () => new Date().toISOString().slice(0, 10);
@@ -59,6 +68,16 @@ function startLabel(iso: string) {
   return `${day}, ${time}`;
 }
 
+const localDay = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+function timerText(totalSecs: number, live: boolean) {
+  const h = Math.floor(totalSecs / 3600);
+  const m = Math.floor((totalSecs % 3600) / 60);
+  const sec = Math.floor(totalSecs % 60);
+  if (!live) return minutes(Math.round(totalSecs / 60));
+  return h ? `${h}H ${m}M` : `${m}M ${sec}S`;
+}
+
 const dueShort = (d: string) => new Date(`${d}T12:00:00`).toLocaleDateString("en-CA", { month: "short", day: "numeric" });
 
 function minutes(n: number) {
@@ -67,12 +86,12 @@ function minutes(n: number) {
   return h ? (m ? `${h}H ${m}M` : `${h}H`) : `${m}M`;
 }
 
-type Draft = { id?: string; title: string; notes: string; priority: Priority; due_date: string; start_at: string; status: Status; tags: string; estimate: string; checklist: Check[] };
+type Draft = { id?: string; title: string; notes: string; priority: Priority; due_date: string; start_at: string; category: Category; status: Status; tags: string; estimate: string; checklist: Check[] };
 
-const blank = (status: Status): Draft => ({ title: "", notes: "", priority: "medium", due_date: "", start_at: "", status, tags: "", estimate: "", checklist: [] });
+const blank = (status: Status): Draft => ({ title: "", notes: "", priority: "medium", due_date: "", start_at: "", category: "shoots", status, tags: "", estimate: "", checklist: [] });
 
 function toDraft(t: Task): Draft {
-  return { id: t.id, title: t.title, notes: t.notes, priority: t.priority, due_date: t.due_date ?? "", start_at: toLocalInput(t.start_at), status: t.status, tags: t.tags.join(", "), estimate: t.estimate_min ? String(t.estimate_min) : "", checklist: t.checklist };
+  return { id: t.id, title: t.title, notes: t.notes, priority: t.priority, due_date: t.due_date ?? "", start_at: toLocalInput(t.start_at), category: t.category, status: t.status, tags: t.tags.join(", "), estimate: t.estimate_min ? String(t.estimate_min) : "", checklist: t.checklist };
 }
 
 export function TasksBoard({ notify }: { notify: Notify }) {
@@ -85,7 +104,9 @@ export function TasksBoard({ notify }: { notify: Notify }) {
   const [overCol, setOverCol] = useState<Status | null>(null);
   const [view, setView] = useState<"board" | "list">("board");
   const [newCheck, setNewCheck] = useState("");
-  const [logged, setLogged] = useState(0);
+  const [loggedBy, setLoggedBy] = useState<Map<string, number>>(() => new Map());
+  const [now, setNow] = useState(() => Date.now());
+  const logged = [...loggedBy.values()].reduce((a, b) => a + b, 0);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,10 +124,22 @@ export function TasksBoard({ notify }: { notify: Notify }) {
 
   useEffect(() => {
     void load();
-    api<{ minutes: number }[]>("/rest/v1/time_entries?select=minutes&task_id=not.is.null&limit=5000", { auth: true })
-      .then((rows) => setLogged(rows.reduce((a, r) => a + r.minutes, 0)))
+    api<{ task_id: string; minutes: number }[]>("/rest/v1/time_entries?select=task_id,minutes&task_id=not.is.null&limit=5000", { auth: true })
+      .then((rows) => {
+        const m = new Map<string, number>();
+        for (const r of rows) m.set(r.task_id, (m.get(r.task_id) ?? 0) + r.minutes);
+        setLoggedBy(m);
+      })
       .catch(() => undefined);
   }, [load]);
+
+  const anyRunning = tasks.some((t) => t.timer_started_at);
+  useEffect(() => {
+    if (!anyRunning) return;
+    setNow(Date.now());
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [anyRunning]);
 
   const byCol = (c: Status) => tasks.filter((t) => t.status === c).sort((a, b) => a.position - b.position);
 
@@ -123,6 +156,7 @@ export function TasksBoard({ notify }: { notify: Notify }) {
   async function move(id: string, status: Status, beforeId?: string) {
     const task = tasks.find((t) => t.id === id);
     if (!task) return;
+    if (status === "done" && task.timer_started_at) void stopTimer(task);
     const col = tasks.filter((t) => t.status === status && t.id !== id).sort((a, b) => a.position - b.position);
     const idx = beforeId ? col.findIndex((t) => t.id === beforeId) : -1;
     const position = idx === -1 ? (col[col.length - 1]?.position ?? 0) + 1 : ((col[idx - 1]?.position ?? col[idx].position - 2) + col[idx].position) / 2;
@@ -135,6 +169,41 @@ export function TasksBoard({ notify }: { notify: Notify }) {
       notify(err instanceof Error ? err.message : "Could not move the task. Run supabase/tasks-upgrade.sql first.", "error");
     }
   }
+
+  async function stopTimer(t: Task, silent = false) {
+    if (!t.timer_started_at) return;
+    const started = new Date(t.timer_started_at);
+    const secs = (Date.now() - started.getTime()) / 1000;
+    const mins = secs >= 30 ? Math.min(1440, Math.max(1, Math.round(secs / 60))) : 0;
+    setTasks((prev) => prev.map((x) => (x.id === t.id ? { ...x, timer_started_at: null } : x)));
+    try {
+      await api(`/rest/v1/tasks?id=eq.${t.id}`, { method: "PATCH", body: { timer_started_at: null, updated_at: new Date().toISOString() }, auth: true, prefer: "return=minimal" });
+      if (mins > 0) {
+        await api("/rest/v1/time_entries", { method: "POST", body: { task_id: t.id, title: t.title.slice(0, 200), category: t.category, minutes: mins, day: localDay(started) }, auth: true, prefer: "return=minimal" });
+        setLoggedBy((m) => new Map(m).set(t.id, (m.get(t.id) ?? 0) + mins));
+        if (!silent) notify(`Logged ${minutes(mins)} on this task.`);
+      } else if (!silent) {
+        notify("Timer stopped. Under 30 seconds, so nothing was logged.");
+      }
+    } catch (err) {
+      setTasks((prev) => prev.map((x) => (x.id === t.id ? t : x)));
+      notify(err instanceof Error ? err.message : "Could not stop the timer. Run supabase/tasks-upgrade.sql first.", "error");
+    }
+  }
+
+  async function startTimer(t: Task) {
+    for (const r of tasks.filter((x) => x.timer_started_at && x.id !== t.id)) await stopTimer(r, true);
+    const at = new Date().toISOString();
+    setTasks((prev) => prev.map((x) => (x.id === t.id ? { ...x, timer_started_at: at } : x)));
+    try {
+      await api(`/rest/v1/tasks?id=eq.${t.id}`, { method: "PATCH", body: { timer_started_at: at, updated_at: at }, auth: true, prefer: "return=minimal" });
+    } catch (err) {
+      setTasks((prev) => prev.map((x) => (x.id === t.id ? t : x)));
+      notify(err instanceof Error ? err.message : "Could not start the timer. Run supabase/tasks-upgrade.sql first.", "error");
+    }
+  }
+
+  const toggleTimer = (t: Task) => (t.timer_started_at ? stopTimer(t) : startTimer(t));
 
   async function save() {
     if (!draft) return;
@@ -149,6 +218,7 @@ export function TasksBoard({ notify }: { notify: Notify }) {
       notes: draft.notes.trim(),
       priority: draft.priority,
       due_date: draft.due_date || null,
+      category: draft.category,
       start_at: draft.start_at ? new Date(draft.start_at).toISOString() : null,
       status: draft.status,
       tags: draft.tags.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 6),
@@ -208,9 +278,11 @@ export function TasksBoard({ notify }: { notify: Notify }) {
   // A plain render function (not a component) so the dragged element is not remounted mid-drag.
   const card = (t: Task) => {
     const due = dueState(t);
+    const running = Boolean(t.timer_started_at);
+    const secs = (loggedBy.get(t.id) ?? 0) * 60 + (running ? Math.max(0, (now - new Date(t.timer_started_at as string).getTime()) / 1000) : 0);
     return (
       <li
-        className={dragId === t.id ? "is-drag" : undefined}
+        className={[dragId === t.id ? "is-drag" : "", running ? "is-running" : ""].filter(Boolean).join(" ") || undefined}
         draggable
         key={t.id}
         onDragEnd={() => {
@@ -247,17 +319,23 @@ export function TasksBoard({ notify }: { notify: Notify }) {
               </span>
             ))}
           </span>
-          {t.estimate_min || t.checklist.length ? (
-            <span className="tk-foot">
-              {t.estimate_min ? <span>{minutes(t.estimate_min)}</span> : null}
-              {t.checklist.length ? (
-                <span>
-                  <Icon name="check" size={12} /> {checkDone(t)}/{t.checklist.length}
-                </span>
-              ) : null}
+          <span className="tk-foot">
+            <span className={running ? "is-live" : undefined}>
+              {timerText(secs, running)}
+              {t.estimate_min ? <em> / {minutes(t.estimate_min)}</em> : null}
             </span>
-          ) : null}
+            {t.checklist.length ? (
+              <span>
+                <Icon name="check" size={12} /> {checkDone(t)}/{t.checklist.length}
+              </span>
+            ) : null}
+          </span>
         </button>
+        {t.status !== "done" ? (
+          <button aria-label={running ? `Pause timer for ${t.title}` : `Start timer for ${t.title}`} className={`tk-timer${running ? " is-on" : ""}`} onClick={() => void toggleTimer(t)} title={running ? "Pause and log time" : "Start timer"} type="button">
+            <Icon name={running ? "pause" : "play"} size={18} />
+          </button>
+        ) : null}
       </li>
     );
   };
@@ -417,6 +495,16 @@ export function TasksBoard({ notify }: { notify: Notify }) {
               <TextInput hint="Minutes" label="Time estimate" onChange={(v) => setDraft({ ...draft, estimate: v.replace(/\D/g, "") })} placeholder="45" value={draft.estimate} />
               <TextInput hint="Separate with commas" label="Tags" onChange={(v) => setDraft({ ...draft, tags: v })} placeholder="website, legal" value={draft.tags} />
             </div>
+            <label className="a-field">
+              <span>Category (used when the timer logs time)</span>
+              <select onChange={(e) => setDraft({ ...draft, category: e.target.value as Category })} value={draft.category}>
+                {CATEGORIES.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <div className="a-field">
               <span>Checklist</span>
