@@ -973,3 +973,10 @@ img, video { max-width: 100%; }
   .a-toasts { right: 0.75rem; left: 0.75rem; }
   .a-toast { max-width: none; }
 }
+
+/* admin fixes */
+.a-top .a-burger { display: none; }
+.a-seg button { white-space: nowrap; }
+.a-postgrid button { grid-template-columns: minmax(0, 1fr); }
+.a-postgrid strong { overflow-wrap: anywhere; }
+@media (max-width: 960px) { .a-top .a-burger { display: grid; } }
