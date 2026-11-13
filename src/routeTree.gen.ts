@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BookFreeConsultationRouteImport } from './routes/book-free-consultation'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as LoginRouteImport } from './routes/login'
@@ -29,6 +30,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookFreeConsultationRoute = BookFreeConsultationRouteImport.update({
+  id: '/book-free-consultation',
+  path: '/book-free-consultation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/login': typeof LoginRoute
   '/contact': typeof ContactRoute
+  '/book-free-consultation': typeof BookFreeConsultationRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/services': typeof ServicesIndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/login': typeof LoginRoute
   '/contact': typeof ContactRoute
+  '/book-free-consultation': typeof BookFreeConsultationRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/services': typeof ServicesIndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/login': typeof LoginRoute
   '/contact': typeof ContactRoute
+  '/book-free-consultation': typeof BookFreeConsultationRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/services': typeof ServicesIndexRoute
   '/robots.txt': typeof RobotsDottxtRoute
@@ -119,10 +128,10 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/admin' | '/blog' | '/blog/$slug' | '/login' | '/contact' | '/services' | '/services/$slug' | '/robots.txt' | '/sitemap.xml'
+  fullPaths: '/' | '/app' | '/admin' | '/blog' | '/blog/$slug' | '/login' | '/contact' | '/book-free-consultation' | '/services' | '/services/$slug' | '/robots.txt' | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/admin' | '/blog' | '/blog/$slug' | '/login' | '/contact' | '/services' | '/services/$slug' | '/robots.txt' | '/sitemap.xml'
-  id: '__root__' | '/' | '/app' | '/admin' | '/blog/' | '/blog/$slug' | '/login' | '/contact' | '/services/' | '/services/$slug' | '/robots.txt' | '/sitemap.xml'
+  to: '/' | '/app' | '/admin' | '/blog' | '/blog/$slug' | '/login' | '/contact' | '/book-free-consultation' | '/services' | '/services/$slug' | '/robots.txt' | '/sitemap.xml'
+  id: '__root__' | '/' | '/app' | '/admin' | '/blog/' | '/blog/$slug' | '/login' | '/contact' | '/book-free-consultation' | '/services/' | '/services/$slug' | '/robots.txt' | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -133,6 +142,7 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   LoginRoute: typeof LoginRoute
   ContactRoute: typeof ContactRoute
+  BookFreeConsultationRoute: typeof BookFreeConsultationRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
@@ -153,6 +163,13 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-free-consultation': {
+      id: '/book-free-consultation'
+      path: '/book-free-consultation'
+      fullPath: '/book-free-consultation'
+      preLoaderRoute: typeof BookFreeConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -229,6 +246,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   LoginRoute: LoginRoute,
   ContactRoute: ContactRoute,
+  BookFreeConsultationRoute: BookFreeConsultationRoute,
   ServicesIndexRoute: ServicesIndexRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,

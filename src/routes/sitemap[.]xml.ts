@@ -15,7 +15,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "    <changefreq>weekly</changefreq>",
           "    <priority>1.0</priority>",
           "  </url>",
-          ...["/services", "/services/real-estate-photography", "/services/property-video-tours", "/services/360-virtual-tours", "/services/drone-photos-and-films", "/services/agent-websites", "/services/full-service-marketing", "/contact", "/blog"].flatMap((p) => ["  <url>", `    <loc>${origin}${p}</loc>`, `    <lastmod>${today}</lastmod>`, "    <priority>0.8</priority>", "  </url>"]),
+          ...["/services", "/services/real-estate-photography", "/services/property-video-tours", "/services/360-virtual-tours", "/services/drone-photos-and-films", "/services/agent-websites", "/services/full-service-marketing", "/contact", "/book-free-consultation", "/blog"].flatMap((p) => ["  <url>", `    <loc>${origin}${p}</loc>`, `    <lastmod>${today}</lastmod>`, "    <priority>0.8</priority>", "  </url>"]),
           "</urlset>",
         ].join("\n");
         return new Response(xml, {
