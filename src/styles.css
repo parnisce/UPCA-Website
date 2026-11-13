@@ -980,3 +980,4 @@ img, video { max-width: 100%; }
 .a-postgrid button { grid-template-columns: minmax(0, 1fr); }
 .a-postgrid strong { overflow-wrap: anywhere; }
 @media (max-width: 960px) { .a-top .a-burger { display: grid; } }
+.a-login { --a-line: rgba(243, 246, 249, 0.1); }
