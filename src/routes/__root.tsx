@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
+  useLocation,
   Link,
   createRootRouteWithContext,
   useRouter,
@@ -12,6 +13,7 @@ import { button } from "@higgsfield/quanta/button";
 import { NotFound } from "@higgsfield/quanta/not-found";
 
 import appCss from "../styles.css?url";
+import { trackView } from "../lib/track";
 import { CONTACT, CORE_AREAS, SITE_ORIGIN, THEME_COLOR } from "../components/upca/content";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 // Page metadata (browser <title>/favicon + social og: tags) committed into the
@@ -234,7 +236,16 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <Tracker />
       <Outlet />
     </QueryClientProvider>
   );
+}
+
+function Tracker() {
+  const pathname = useLocation({ select: (l) => l.pathname });
+  useEffect(() => {
+    trackView(pathname);
+  }, [pathname]);
+  return null;
 }

@@ -1,16 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { api, checkAdmin, getSession, signOut, type Enquiry, type Post } from "@/lib/supabase";
+import { Analytics } from "./analytics";
 import { ContentManager } from "./content-manager";
 import { Dashboard } from "./dashboard";
 import { EnquiriesManager } from "./enquiries-manager";
+import { Insights } from "./insights";
+import { TasksBoard } from "./tasks-board";
 import { Icon, type IconName, type Notify, type ToastKind } from "./parts";
 import { PostsManager } from "./posts-manager";
 
-export type View = "dashboard" | "content" | "posts" | "enquiries";
+export type View = "dashboard" | "analytics" | "insights" | "tasks" | "content" | "posts" | "enquiries";
 
 const NAV: { id: View; label: string; icon: IconName }[] = [
   { id: "dashboard", label: "Dashboard", icon: "dashboard" },
+  { id: "analytics", label: "Analytics", icon: "chart" },
+  { id: "insights", label: "Insights", icon: "bulb" },
+  { id: "tasks", label: "Task board", icon: "board" },
   { id: "enquiries", label: "Enquiries", icon: "inbox" },
   { id: "posts", label: "Blog posts", icon: "posts" },
   { id: "content", label: "Homepage", icon: "content" },
@@ -177,6 +183,9 @@ export function AdminApp() {
 
         <div className="a-content">
           {view === "dashboard" ? <Dashboard email={email} enquiries={enquiries} go={go} loading={loading} posts={posts} /> : null}
+          {view === "analytics" ? <Analytics enquiries={enquiries} /> : null}
+          {view === "insights" ? <Insights enquiries={enquiries} go={go} posts={posts} /> : null}
+          {view === "tasks" ? <TasksBoard notify={notify} /> : null}
           {view === "enquiries" ? <EnquiriesManager enquiries={enquiries} focusId={focusEnquiry} notify={notify} onChange={setEnquiries} /> : null}
           {view === "posts" ? <PostsManager notify={notify} onChange={setPosts} posts={posts} /> : null}
           {view === "content" ? <ContentManager notify={notify} /> : null}
