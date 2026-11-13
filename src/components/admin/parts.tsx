@@ -28,6 +28,10 @@ const PATHS: Record<string, string> = {
   board: "M4 4h6v16H4V4Zm10 0h6v9h-6V4Z",
   bulb: "M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3Z",
   chart: "M4 20V10m6 10V4m6 16v-7m4 7H3",
+  left: "M15 6l-6 6 6 6",
+  right: "M9 6l6 6-6 6",
+  tasks: "M5 6l1.5 1.5L9 5M5 12l1.5 1.5L9 11M5 18l1.5 1.5L9 17M12 6h8M12 12h8M12 18h8",
+  trend: "M4 19V5M4 19h16M7 15l4-4 3 3 5-6",
   lock: "M6 11h12v9H6v-9Zm3 0V8a3 3 0 0 1 6 0v3",
 };
 

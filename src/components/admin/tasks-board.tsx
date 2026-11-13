@@ -69,6 +69,7 @@ export function TasksBoard({ notify }: { notify: Notify }) {
   const [overCol, setOverCol] = useState<Status | null>(null);
   const [view, setView] = useState<"board" | "list">("board");
   const [newCheck, setNewCheck] = useState("");
+  const [logged, setLogged] = useState(0);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -86,6 +87,9 @@ export function TasksBoard({ notify }: { notify: Notify }) {
 
   useEffect(() => {
     void load();
+    api<{ minutes: number }[]>("/rest/v1/time_entries?select=minutes&task_id=not.is.null&limit=5000", { auth: true })
+      .then((rows) => setLogged(rows.reduce((a, r) => a + r.minutes, 0)))
+      .catch(() => undefined);
   }, [load]);
 
   const byCol = (c: Status) => tasks.filter((t) => t.status === c).sort((a, b) => a.position - b.position);
@@ -275,9 +279,9 @@ export function TasksBoard({ notify }: { notify: Notify }) {
           </span>
         </div>
         <div>
-          <small>Time planned</small>
-          <strong>{stats.planned ? minutes(stats.planned) : "0M"}</strong>
-          <span>{stats.planned ? "Across open tasks" : "Add estimates to track against"}</span>
+          <small>Time logged</small>
+          <strong>{minutes(logged)}</strong>
+          <span>{stats.planned ? `of ${minutes(stats.planned)} planned on open tasks` : "Log time from Insights"}</span>
         </div>
         <div>
           <small>In progress</small>

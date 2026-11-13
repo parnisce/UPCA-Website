@@ -6,20 +6,21 @@ import { ContentManager } from "./content-manager";
 import { Dashboard } from "./dashboard";
 import { EnquiriesManager } from "./enquiries-manager";
 import { Insights } from "./insights";
+import { LeadInsights } from "./lead-insights";
 import { TasksBoard } from "./tasks-board";
 import { Icon, type IconName, type Notify, type ToastKind } from "./parts";
 import { PostsManager } from "./posts-manager";
 
 export type View = "dashboard" | "analytics" | "insights" | "tasks" | "content" | "posts" | "enquiries";
 
-const NAV: { id: View; label: string; icon: IconName }[] = [
-  { id: "dashboard", label: "Dashboard", icon: "dashboard" },
-  { id: "analytics", label: "Analytics", icon: "chart" },
-  { id: "insights", label: "Insights", icon: "bulb" },
-  { id: "tasks", label: "Task board", icon: "board" },
-  { id: "enquiries", label: "Enquiries", icon: "inbox" },
-  { id: "posts", label: "Blog posts", icon: "posts" },
-  { id: "content", label: "Homepage", icon: "content" },
+const NAV: { id: View; label: string; icon: IconName; group: "Manage" | "Website" }[] = [
+  { id: "dashboard", label: "Dashboard", icon: "dashboard", group: "Manage" },
+  { id: "tasks", label: "Tasks", icon: "tasks", group: "Manage" },
+  { id: "insights", label: "Insights", icon: "chart", group: "Manage" },
+  { id: "content", label: "Homepage", icon: "content", group: "Website" },
+  { id: "posts", label: "Blog posts", icon: "posts", group: "Website" },
+  { id: "enquiries", label: "Enquiries", icon: "mail", group: "Website" },
+  { id: "analytics", label: "Analytics", icon: "trend", group: "Website" },
 ];
 
 function viewFromHash(): View {
@@ -132,20 +133,24 @@ export function AdminApp() {
         <a className="a-side__logo" href="/admin">
           <img alt="UPCA" height={48} src="/assets/logo-light.png" width={145} />
         </a>
-        <p className="a-side__label">Manage</p>
         <nav aria-label="Admin">
-          {NAV.map((n) => (
-            <button aria-current={view === n.id ? "page" : undefined} className="a-nav" key={n.id} onClick={() => go(n.id)} type="button">
-              <Icon name={n.icon} />
-              <span>{n.label}</span>
-              {n.id === "enquiries" && newCount > 0 ? <b className="a-badge">{newCount}</b> : null}
-            </button>
+          {(["Manage", "Website"] as const).map((g) => (
+            <div className="a-side__group" key={g}>
+              <p className="a-side__label">{g}</p>
+              {NAV.filter((n) => n.group === g).map((n) => (
+                <button aria-current={view === n.id ? "page" : undefined} className="a-nav" key={n.id} onClick={() => go(n.id)} type="button">
+                  <Icon name={n.icon} />
+                  <span>{n.label}</span>
+                  {n.id === "enquiries" && newCount > 0 ? <b className="a-badge">{newCount}</b> : null}
+                </button>
+              ))}
+            </div>
           ))}
         </nav>
         <div className="a-side__foot">
-          <a className="a-nav" href="/" rel="noopener noreferrer" target="_blank">
-            <Icon name="external" />
-            <span>View website</span>
+          <a className="a-live" href="/" rel="noopener noreferrer" target="_blank">
+            <Icon name="external" size={16} />
+            <span>View live site</span>
           </a>
           <div className="a-user">
             <span className="a-avatar">{(email[0] ?? "A").toUpperCase()}</span>
@@ -153,11 +158,10 @@ export function AdminApp() {
               <strong>Admin</strong>
               <small>{email}</small>
             </div>
+            <button aria-label="Sign out" className="a-user__out" onClick={logout} title="Sign out" type="button">
+              <Icon name="logout" size={18} />
+            </button>
           </div>
-          <button className="a-nav a-nav--out" onClick={logout} type="button">
-            <Icon name="logout" />
-            <span>Sign out</span>
-          </button>
         </div>
       </aside>
       {menuOpen ? <button aria-label="Close menu" className="a-scrim" onClick={() => setMenuOpen(false)} type="button" /> : null}
@@ -183,8 +187,14 @@ export function AdminApp() {
 
         <div className="a-content">
           {view === "dashboard" ? <Dashboard email={email} enquiries={enquiries} go={go} loading={loading} posts={posts} /> : null}
-          {view === "analytics" ? <Analytics enquiries={enquiries} /> : null}
-          {view === "insights" ? <Insights enquiries={enquiries} go={go} posts={posts} /> : null}
+          {view === "analytics" ? (
+            <>
+              <Analytics enquiries={enquiries} />
+              <h2 className="a-section-title">Enquiry insights</h2>
+              <LeadInsights enquiries={enquiries} go={go} posts={posts} />
+            </>
+          ) : null}
+          {view === "insights" ? <Insights notify={notify} /> : null}
           {view === "tasks" ? <TasksBoard notify={notify} /> : null}
           {view === "enquiries" ? <EnquiriesManager enquiries={enquiries} focusId={focusEnquiry} notify={notify} onChange={setEnquiries} /> : null}
           {view === "posts" ? <PostsManager notify={notify} onChange={setPosts} posts={posts} /> : null}
