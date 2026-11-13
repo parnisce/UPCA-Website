@@ -72,6 +72,10 @@ export function EnquiriesManager({ enquiries, onChange, notify, focusId }: { enq
     setBusy(true);
     try {
       await api(`/rest/v1/enquiries?id=eq.${e.id}`, { method: "DELETE", auth: true });
+      if (e.source.startsWith("book:")) {
+        // Free the consultation time so someone else can book it.
+        await api(`/rest/v1/bookings?slot_start=eq.${encodeURIComponent(e.source.slice(5))}`, { method: "DELETE", auth: true }).catch(() => undefined);
+      }
       onChange(enquiries.filter((x) => x.id !== e.id));
       setSelectedId(null);
       notify("Enquiry deleted.");

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { PageHero, PageShell } from "@/components/upca/page-shell";
 import { useContact } from "@/lib/site-content";
-import { api } from "@/lib/supabase";
+import { ApiError, api } from "@/lib/supabase";
 
 const DESC = "Book a free 15-minute consultation with UPCA Real Estate Marketing and Media. Pick a date and time that suits you. No obligation.";
 const BUSINESS_TZ = "America/Toronto";
@@ -72,13 +72,13 @@ const fmtTime = (ts: number, tz: string) => {
 };
 const fmtLong = (ts: number, tz: string) => new Intl.DateTimeFormat("en-CA", { timeZone: tz, weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(new Date(ts));
 
-function slotsFor(day: Ymd): number[] {
+function slotsFor(day: Ymd, taken: Set<number>): number[] {
   if (dow(day) === 0) return [];
   const out: number[] = [];
   const floor = Date.now() + NOTICE_MS;
   for (let mins = OPEN_HOUR * 60; mins < CLOSE_HOUR * 60; mins += SLOT_MIN) {
     const ts = zonedToInstant(day, Math.floor(mins / 60), mins % 60, BUSINESS_TZ);
-    if (ts >= floor) out.push(ts);
+    if (ts >= floor && !taken.has(ts)) out.push(ts);
   }
   return out;
 }
@@ -107,7 +107,19 @@ function BookingPage() {
   const [error, setError] = useState("");
 
   const zones = ZONES.some((z) => z.id === tz) ? ZONES : [{ id: tz, label: tz.replace(/_/g, " ") }, ...ZONES];
-  const slots = useMemo(() => slotsFor(day), [day]);
+  const [taken, setTaken] = useState<Set<number>>(() => new Set());
+  const loadTaken = useCallback(async () => {
+    try {
+      const rows = await api<{ slot_start: string }[]>(`/rest/v1/bookings?select=slot_start&slot_start=gte.${encodeURIComponent(new Date().toISOString())}&limit=2000`);
+      setTaken(new Set(rows.map((r) => new Date(r.slot_start).getTime())));
+    } catch {
+      // Table not reachable: show all slots; the database still blocks duplicates on submit.
+    }
+  }, []);
+  useEffect(() => {
+    void loadTaken();
+  }, [loadTaken]);
+  const slots = useMemo(() => slotsFor(day, taken), [day, taken]);
   const week = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart]);
 
   const monthCells = useMemo(() => {
@@ -168,8 +180,19 @@ function BookingPage() {
       package: "Free consultation",
       area: get("area").slice(0, 300),
       message: [`BOOKING REQUEST: ${when}`, tz !== BUSINESS_TZ ? `Visitor time zone: ${tz} (${fmtTime(slot, tz)})` : "", note].filter(Boolean).join("\n").slice(0, 5000),
-      source: "/book-free-consultation",
+      source: `book:${new Date(slot).toISOString()}`,
     };
+    try {
+      await api("/rest/v1/bookings", { method: "POST", body: { slot_start: new Date(slot).toISOString(), email: record.email }, prefer: "return=minimal" });
+    } catch (err) {
+      if (err instanceof ApiError && (err.status === 409 || /duplicate|unique|23505/i.test(err.message))) {
+        setStatus("idle");
+        setSlot(null);
+        setError("Sorry, that time was just booked by someone else. Please choose another time.");
+        void loadTaken();
+        return;
+      }
+    }
     try {
       await api("/rest/v1/enquiries", { method: "POST", body: record, prefer: "return=minimal" });
     } catch {
