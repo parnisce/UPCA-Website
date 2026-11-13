@@ -10,5 +10,6 @@ alter table public.tasks add constraint tasks_status_check check (status in ('op
 alter table public.tasks add column if not exists tags text[] not null default '{}';
 alter table public.tasks add column if not exists estimate_min integer;
 alter table public.tasks add column if not exists checklist jsonb not null default '[]'::jsonb;
+alter table public.tasks add column if not exists start_at timestamptz;
 
 notify pgrst, 'reload schema';

@@ -279,3 +279,6 @@ revoke all on public.time_entries from anon;
 grant all on public.time_entries to authenticated;
 
 notify pgrst, 'reload schema';
+
+alter table public.tasks add column if not exists start_at timestamptz;
+notify pgrst, 'reload schema';

@@ -13,6 +13,7 @@ type Task = {
   status: Status;
   priority: Priority;
   due_date: string | null;
+  start_at: string | null;
   position: number;
   tags: string[];
   estimate_min: number | null;
@@ -31,7 +32,7 @@ const PRIORITIES: Priority[] = ["low", "medium", "high"];
 const DAY = 86_400_000;
 
 function normalise(t: Task & { status: string }): Task {
-  return { ...t, status: (t.status === "todo" ? "open" : t.status) as Status, tags: t.tags ?? [], checklist: t.checklist ?? [], estimate_min: t.estimate_min ?? null };
+  return { ...t, status: (t.status === "todo" ? "open" : t.status) as Status, tags: t.tags ?? [], checklist: t.checklist ?? [], estimate_min: t.estimate_min ?? null, start_at: t.start_at ?? null };
 }
 
 const todayStr = () => new Date().toISOString().slice(0, 10);
@@ -43,6 +44,21 @@ function dueState(t: Task): "late" | "soon" | "" {
   return n < 0 ? "late" : n <= 2 ? "soon" : "";
 }
 
+// Value for <input type="datetime-local"> in the viewer's own time zone.
+function toLocalInput(iso: string | null) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+function startLabel(iso: string) {
+  const d = new Date(iso);
+  const day = d.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
+  const time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).replace(" AM", " am").replace(" PM", " pm");
+  return `${day}, ${time}`;
+}
+
 const dueShort = (d: string) => new Date(`${d}T12:00:00`).toLocaleDateString("en-CA", { month: "short", day: "numeric" });
 
 function minutes(n: number) {
@@ -51,12 +67,12 @@ function minutes(n: number) {
   return h ? (m ? `${h}H ${m}M` : `${h}H`) : `${m}M`;
 }
 
-type Draft = { id?: string; title: string; notes: string; priority: Priority; due_date: string; status: Status; tags: string; estimate: string; checklist: Check[] };
+type Draft = { id?: string; title: string; notes: string; priority: Priority; due_date: string; start_at: string; status: Status; tags: string; estimate: string; checklist: Check[] };
 
-const blank = (status: Status): Draft => ({ title: "", notes: "", priority: "medium", due_date: "", status, tags: "", estimate: "", checklist: [] });
+const blank = (status: Status): Draft => ({ title: "", notes: "", priority: "medium", due_date: "", start_at: "", status, tags: "", estimate: "", checklist: [] });
 
 function toDraft(t: Task): Draft {
-  return { id: t.id, title: t.title, notes: t.notes, priority: t.priority, due_date: t.due_date ?? "", status: t.status, tags: t.tags.join(", "), estimate: t.estimate_min ? String(t.estimate_min) : "", checklist: t.checklist };
+  return { id: t.id, title: t.title, notes: t.notes, priority: t.priority, due_date: t.due_date ?? "", start_at: toLocalInput(t.start_at), status: t.status, tags: t.tags.join(", "), estimate: t.estimate_min ? String(t.estimate_min) : "", checklist: t.checklist };
 }
 
 export function TasksBoard({ notify }: { notify: Notify }) {
@@ -133,6 +149,7 @@ export function TasksBoard({ notify }: { notify: Notify }) {
       notes: draft.notes.trim(),
       priority: draft.priority,
       due_date: draft.due_date || null,
+      start_at: draft.start_at ? new Date(draft.start_at).toISOString() : null,
       status: draft.status,
       tags: draft.tags.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 6),
       estimate_min: Number.isFinite(est) && est > 0 ? est : null,
@@ -222,6 +239,7 @@ export function TasksBoard({ notify }: { notify: Notify }) {
           {t.notes ? <small>{t.notes}</small> : null}
           <span className="tk-chips">
             <span className={`tk-chip tk-chip--${t.priority}`}>{t.priority[0].toUpperCase() + t.priority.slice(1)}</span>
+            {t.start_at ? <span className="tk-chip">Starts {startLabel(t.start_at)}</span> : null}
             {t.due_date ? <span className={`tk-chip${due ? ` tk-chip--${due}` : ""}`}>Due {dueShort(t.due_date)}</span> : null}
             {t.tags.map((g) => (
               <span className="tk-chip tk-chip--tag" key={g}>
@@ -349,7 +367,7 @@ export function TasksBoard({ notify }: { notify: Notify }) {
                 </span>
                 <strong>{t.title}</strong>
                 <span className={`tk-chip tk-chip--${t.priority}`}>{t.priority[0].toUpperCase() + t.priority.slice(1)}</span>
-                <span className="tk-row__due">{t.due_date ? `Due ${dueShort(t.due_date)}` : ""}</span>
+                <span className="tk-row__due">{t.start_at ? `Starts ${startLabel(t.start_at)}` : t.due_date ? `Due ${dueShort(t.due_date)}` : ""}</span>
               </button>
             ))
           )}
@@ -392,10 +410,13 @@ export function TasksBoard({ notify }: { notify: Notify }) {
               </label>
             </div>
             <div className="a-two">
+              <TextInput label="Start time" onChange={(v) => setDraft({ ...draft, start_at: v })} type="datetime-local" value={draft.start_at} />
               <TextInput label="Due date" onChange={(v) => setDraft({ ...draft, due_date: v })} type="date" value={draft.due_date} />
-              <TextInput hint="Minutes" label="Time estimate" onChange={(v) => setDraft({ ...draft, estimate: v.replace(/\D/g, "") })} placeholder="45" value={draft.estimate} />
             </div>
-            <TextInput hint="Separate with commas" label="Tags" onChange={(v) => setDraft({ ...draft, tags: v })} placeholder="website, legal" value={draft.tags} />
+            <div className="a-two">
+              <TextInput hint="Minutes" label="Time estimate" onChange={(v) => setDraft({ ...draft, estimate: v.replace(/\D/g, "") })} placeholder="45" value={draft.estimate} />
+              <TextInput hint="Separate with commas" label="Tags" onChange={(v) => setDraft({ ...draft, tags: v })} placeholder="website, legal" value={draft.tags} />
+            </div>
 
             <div className="a-field">
               <span>Checklist</span>
